@@ -1,0 +1,16 @@
+services:
+  - type: web
+    name: careermatch-ai-backend
+    runtime: python
+    plan: free
+    buildCommand: pip install --upgrade pip && pip install -r requirements.txt
+    startCommand: uvicorn main:app --host 0.0.0.0 --port $PORT
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.12.0
+      - key: AUTH_SECRET
+        generateValue: true
+      - key: FRONTEND_ORIGINS
+        value: https://your-frontend.vercel.app
+      - key: AUTH_COOKIE_SECURE
+        value: true
