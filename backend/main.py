@@ -166,6 +166,10 @@ def logout(response: Response):
     response.delete_cookie(AUTH_COOKIE, httponly=True, secure=AUTH_COOKIE_SECURE, samesite=AUTH_COOKIE_SAMESITE, path="/")
     return {"status": "signed_out"}
 
+@app.get("/")
+def root():
+    return {"status": "ok", "service": "CareerMatch AI API", "health": "/api/health", "docs": "/docs"}
+
 @app.get("/api/health")
 def health():
     return {"status": "ok", "service": "CareerMatch AI"}
