@@ -29,6 +29,7 @@ AUTH_SECRET_BYTES = AUTH_SECRET.encode("utf-8") if AUTH_SECRET else secrets.toke
 AUTH_COOKIE = "cm_session"
 AUTH_SESSION_SECONDS = 60 * 60 * 24 * 7
 AUTH_COOKIE_SECURE = os.getenv("AUTH_COOKIE_SECURE", "false").lower() == "true"
+AUTH_COOKIE_SAMESITE = os.getenv("AUTH_COOKIE_SAMESITE", "lax").lower()
 SKILLS = ["Python", "SQL", "Excel", "Power BI", "Tableau", "Java", "JavaScript", "TypeScript", "React", "Node.js", "FastAPI", "Django", "Spring Boot", "PostgreSQL", "MySQL", "MongoDB", "Git", "Docker", "AWS", "Azure", "Machine Learning", "Data Analysis", "Data Visualization", "Statistics", "Communication", "Problem Solving", "Project Management", "Agile", "Scrum", "Customer Service", "Marketing", "SEO", "Figma", "HTML", "CSS", "REST APIs", "Testing", "Accounting", "Budgeting", "Sales", "Leadership", "Research", "Microsoft Word", "Presentation", "Data Cleaning", "ETL", "Pandas", "NumPy", "Scikit-learn"]
 ALIASES = {"power bi": ["powerbi"], "javascript": ["js"], "typescript": ["ts"], "postgresql": ["postgres"], "data visualization": ["data visualisation"], "machine learning": ["ml"], "rest apis": ["rest api"], "node.js": ["nodejs", "node js"], "scikit-learn": ["sklearn"]}
 
@@ -119,7 +120,7 @@ def _read_session_user(request: Request) -> dict:
     return dict(user)
 
 def _set_session_cookie(response: Response, user_id: int):
-    response.set_cookie(AUTH_COOKIE, _create_session_token(user_id), max_age=AUTH_SESSION_SECONDS, httponly=True, secure=AUTH_COOKIE_SECURE, samesite="lax", path="/")
+    response.set_cookie(AUTH_COOKIE, _create_session_token(user_id), max_age=AUTH_SESSION_SECONDS, httponly=True, secure=AUTH_COOKIE_SECURE, samesite=AUTH_COOKIE_SAMESITE, path="/")
 
 initialize_auth_db()
 
@@ -162,7 +163,7 @@ def current_user(request: Request):
 
 @app.post("/api/auth/logout")
 def logout(response: Response):
-    response.delete_cookie(AUTH_COOKIE, httponly=True, secure=AUTH_COOKIE_SECURE, samesite="lax", path="/")
+    response.delete_cookie(AUTH_COOKIE, httponly=True, secure=AUTH_COOKIE_SECURE, samesite=AUTH_COOKIE_SAMESITE, path="/")
     return {"status": "signed_out"}
 
 @app.get("/api/health")
