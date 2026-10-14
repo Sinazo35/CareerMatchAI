@@ -12,7 +12,7 @@ import time
 from functools import lru_cache
 from typing import Annotated
 
-import fitz
+import pymupdf
 from docx import Document
 from fastapi import FastAPI, File, Form, HTTPException, Request, Response, UploadFile
 from fastapi.middleware.cors import CORSMiddleware
@@ -180,7 +180,7 @@ async def parse_cv(file: Annotated[UploadFile, File()]):
         raise HTTPException(413, "File exceeds the 5 MB limit.")
     try:
         if ext == ".pdf":
-            with fitz.open(stream=data, filetype="pdf") as pdf:
+            with pymupdf.open(stream=data, filetype="pdf") as pdf:
                 text = "\n".join(page.get_text() for page in pdf)
         elif ext == ".docx":
             document = Document(io.BytesIO(data))
